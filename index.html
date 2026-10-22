@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Campus Careers is a frontend-only college job portal. Browse internships and entry-level roles, post a job, and save applications in this browser.">
+  <title>Campus Careers</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230c2340'/%3E%3Cpath d='M6 14.5 16 8l10 6.5-10 6.5L6 14.5z' fill='%238ec5ff'/%3E%3Cpath d='M11 17v4.2c0 1.6 2.2 3.3 5 3.3s5-1.7 5-3.3V17' fill='none' stroke='white' stroke-width='1.6'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="#home">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="currentColor"></rect>
+          <path d="M6 14.5 16 8l10 6.5-10 6.5L6 14.5z" fill="#ffb067"></path>
+          <path d="M11 17v4.2c0 1.6 2.2 3.3 5 3.3s5-1.7 5-3.3V17" fill="none" stroke="#fff" stroke-width="1.6"></path>
+        </svg>
+        <span>Campus Careers</span>
+      </a>
+
+      <button
+        class="nav-toggle"
+        id="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+      >
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden">Open menu</span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#jobs">Browse Jobs</a></li>
+          <li><a href="#post-job">Post a Job</a></li>
+          <li><a href="#applications">My Applications</a></li>
+          <li><a href="#analytics">Analytics</a></li>
+          <li>
+            <button class="nav-account" id="open-profile" type="button">Login / Register</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="demo-note" role="note">
+    <p>
+      Accounts, posted jobs, and applications are saved in this browser on your computer (localStorage). Netlify only hosts the pages. Other students and other devices will not see your login or applications.
+    </p>
+  </div>
+
+  <main id="main">
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">College placement portal</p>
+        <h1 id="hero-title">Find Your Next Opportunity on Campus</h1>
+        <p class="lede">Discover internships, part-time jobs, and placement opportunities designed for students.</p>
+
+        <form class="search-panel" id="hero-search" role="search">
+          <div class="field">
+            <label for="hero-query">Search by title or company</label>
+            <input id="hero-query" name="query" type="search" placeholder="Try “design” or “Helio”" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="hero-category">Category</label>
+            <select id="hero-category" name="category">
+              <option value="all">All categories</option>
+              <option value="Software">Software</option>
+              <option value="Design">Design</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Data">Data</option>
+              <option value="Campus">Campus</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="submit">Search</button>
+          <a class="btn btn-secondary" href="#jobs">Browse Jobs</a>
+        </form>
+      </div>
+
+      <div class="stat-grid" aria-label="Portal snapshot">
+        <article class="stat-card">
+          <p class="stat-value" id="stat-roles">0</p>
+          <p class="stat-label">Open roles</p>
+        </article>
+        <article class="stat-card">
+          <p class="stat-value" id="stat-internships">0</p>
+          <p class="stat-label">Internships</p>
+        </article>
+        <article class="stat-card">
+          <p class="stat-value" id="stat-applications">0</p>
+          <p class="stat-label">Applications saved here</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="jobs" aria-labelledby="jobs-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Listings</p>
+          <h2 id="jobs-title">Browse jobs</h2>
+        </div>
+        <p class="result-count" id="jobs-count" aria-live="polite"></p>
+      </div>
+
+      <form class="filter-bar" id="jobs-filter" role="search">
+        <div class="field">
+          <label for="jobs-query">Search by title or company</label>
+          <input id="jobs-query" name="query" type="search" placeholder="Job title or company" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="jobs-category">Category</label>
+          <select id="jobs-category" name="category">
+            <option value="all">All categories</option>
+            <option value="Software">Software</option>
+            <option value="Design">Design</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Data">Data</option>
+            <option value="Campus">Campus</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="jobs-type">Job type</label>
+          <select id="jobs-type" name="type">
+            <option value="all">All types</option>
+            <option value="Internship">Internship</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Full-time">Full-time</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost" id="clear-filters" type="button">Clear filters</button>
+      </form>
+
+      <div class="job-grid" id="jobs-list"></div>
+      <p class="empty-state" id="jobs-empty" hidden>No jobs match your search. Try a different title, company, category, or job type.</p>
+    </section>
+
+    <section class="panel" id="post-job" aria-labelledby="post-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">For clubs and student teams</p>
+          <h2 id="post-title">Post a job</h2>
+        </div>
+      </div>
+      <p class="section-intro">Add a role to the list on this browser. After you refresh, it stays here. Other people will not see it.</p>
+
+      <form class="stack-form" id="post-form" novalidate>
+        <div class="form-alert" id="post-alert" role="alert" hidden></div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="job-title">Job title</label>
+            <input id="job-title" name="title" type="text" maxlength="80" required>
+            <span class="field-error" id="job-title-error"></span>
+          </div>
+          <div class="field">
+            <label for="job-company">Company name</label>
+            <input id="job-company" name="company" type="text" maxlength="80" required>
+            <span class="field-error" id="job-company-error"></span>
+          </div>
+          <div class="field field-span">
+            <label for="job-description">Job description</label>
+            <textarea id="job-description" name="description" rows="5" maxlength="1500" required></textarea>
+            <span class="field-error" id="job-description-error"></span>
+          </div>
+          <div class="field">
+            <label for="job-type">Job type</label>
+            <select id="job-type" name="type" required>
+              <option value="">Select a type</option>
+              <option value="Internship">Internship</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Full-time">Full-time</option>
+            </select>
+            <span class="field-error" id="job-type-error"></span>
+          </div>
+          <div class="field">
+            <label for="job-category">Category</label>
+            <select id="job-category" name="category" required>
+              <option value="">Select a category</option>
+              <option value="Software">Software</option>
+              <option value="Design">Design</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Data">Data</option>
+              <option value="Campus">Campus</option>
+            </select>
+            <span class="field-error" id="job-category-error"></span>
+          </div>
+          <div class="field">
+            <label for="job-location">Location</label>
+            <input id="job-location" name="location" type="text" maxlength="80" placeholder="Campus, remote, or city" required>
+            <span class="field-error" id="job-location-error"></span>
+          </div>
+          <div class="field">
+            <label for="job-salary">Salary or stipend</label>
+            <input id="job-salary" name="salary" type="text" maxlength="60" placeholder="₹15,000 / month" required>
+            <span class="field-error" id="job-salary-error"></span>
+          </div>
+          <div class="field field-span">
+            <label for="job-skills">Required skills</label>
+            <input id="job-skills" name="skills" type="text" maxlength="160" placeholder="Separate skills with commas" required>
+            <span class="field-error" id="job-skills-error"></span>
+          </div>
+          <div class="field">
+            <label for="job-deadline">Application deadline</label>
+            <input id="job-deadline" name="deadline" type="date" required>
+            <span class="field-error" id="job-deadline-error"></span>
+          </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Publish job</button>
+      </form>
+    </section>
+
+    <section class="panel" id="applications" aria-labelledby="applications-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Your activity</p>
+          <h2 id="applications-title">My applications</h2>
+        </div>
+      </div>
+      <p class="section-intro">
+        Every application starts as <strong>Submitted</strong>. A live portal might later show Under Review or Shortlisted after an employer acts on it. This demo never changes the status, because nobody reviews applications here.
+      </p>
+      <div class="application-list" id="applications-list"></div>
+      <p class="empty-state" id="applications-empty">You have not applied to any jobs in this browser yet.</p>
+    </section>
+
+    <section class="panel" id="analytics" aria-labelledby="analytics-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Company snapshot</p>
+          <h2 id="analytics-title">Ten-year analytics</h2>
+        </div>
+        <div class="field analytics-picker">
+          <label for="analytics-company">Company</label>
+          <select id="analytics-company"></select>
+        </div>
+      </div>
+      <p class="section-intro" id="analytics-note"></p>
+
+      <div class="analytics-summary" id="analytics-summary"></div>
+
+      <div class="chart-grid">
+        <article class="chart-card">
+          <h3>Hiring and exits</h3>
+          <p class="meta">People hired and people who left each year.</p>
+          <div class="bar-chart" id="chart-people" role="img" aria-label="Hiring and exits by year"></div>
+          <p class="chart-legend"><span class="swatch swatch-hired"></span> Hired <span class="swatch swatch-exits"></span> Exits</p>
+        </article>
+        <article class="chart-card">
+          <h3>Salary and income</h3>
+          <p class="meta">Average campus-offer salary and company revenue.</p>
+          <div class="bar-chart" id="chart-money" role="img" aria-label="Salary and revenue by year"></div>
+          <p class="chart-legend"><span class="swatch swatch-salary"></span> Avg salary <span class="swatch swatch-revenue"></span> Revenue</p>
+        </article>
+      </div>
+
+      <div class="table-wrap">
+        <table class="analytics-table">
+          <caption id="analytics-caption">Yearly figures</caption>
+          <thead>
+            <tr>
+              <th scope="col">Year</th>
+              <th scope="col">Hired</th>
+              <th scope="col">Exits</th>
+              <th scope="col">Net change</th>
+              <th scope="col">Avg salary</th>
+              <th scope="col">Salary change</th>
+              <th scope="col">Revenue</th>
+              <th scope="col">Profit</th>
+            </tr>
+          </thead>
+          <tbody id="analytics-rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-brand">Campus Careers</p>
+        <p>A simple campus job board for students exploring internships, part-time work, and entry-level placements.</p>
+      </div>
+      <div>
+        <h2>About the portal</h2>
+        <p>Built as a frontend-only college mini-project. Sample jobs live in the page script. Anything you post or apply to is stored locally and disappears if you clear site data.</p>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <p>Placeholder only — this inbox is not monitored.</p>
+        <p><a href="mailto:careers@campus.example">careers@campus.example</a></p>
+        <p>Phone placeholder: +91 00000 00000</p>
+      </div>
+    </div>
+    <p class="copyright">© <span id="year"></span> Campus Careers. For classroom use.</p>
+  </footer>
+
+  <dialog class="modal" id="details-dialog" aria-labelledby="details-title">
+    <div class="modal-card">
+      <button class="icon-button" id="close-details" type="button" aria-label="Close job details">×</button>
+      <p class="eyebrow" id="details-type"></p>
+      <h2 id="details-title"></h2>
+      <p class="company" id="details-company"></p>
+      <dl class="detail-meta">
+        <div>
+          <dt>Location</dt>
+          <dd id="details-location"></dd>
+        </div>
+        <div>
+          <dt>Salary or stipend</dt>
+          <dd id="details-salary"></dd>
+        </div>
+        <div>
+          <dt>Application deadline</dt>
+          <dd id="details-deadline"></dd>
+        </div>
+        <div>
+          <dt>Category</dt>
+          <dd id="details-category"></dd>
+        </div>
+      </dl>
+      <h3>About the role</h3>
+      <p id="details-description"></p>
+      <h3>Required skills</h3>
+      <ul class="skills" id="details-skills"></ul>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="details-apply" type="button">Apply Now</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="modal" id="apply-dialog" aria-labelledby="apply-title">
+    <div class="modal-card">
+      <button class="icon-button" id="close-apply" type="button" aria-label="Close application form">×</button>
+      <p class="eyebrow">Application</p>
+      <h2 id="apply-title">Apply</h2>
+      <p class="section-intro" id="apply-subtitle"></p>
+      <form id="apply-form" novalidate>
+        <div class="form-alert" id="apply-alert" role="alert" hidden></div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="student-name">Student name</label>
+            <input id="student-name" name="studentName" type="text" maxlength="80" autocomplete="name" required>
+            <span class="field-error" id="student-name-error"></span>
+          </div>
+          <div class="field">
+            <label for="student-email">College email</label>
+            <input id="student-email" name="email" type="email" maxlength="120" autocomplete="email" required>
+            <span class="field-error" id="student-email-error"></span>
+          </div>
+          <div class="field">
+            <label for="student-department">Department</label>
+            <select id="student-department" name="department" required>
+              <option value="">Select department</option>
+              <option>Computer Science</option>
+              <option>Information Technology</option>
+              <option>Electronics</option>
+              <option>Mechanical</option>
+              <option>Civil</option>
+              <option>Design</option>
+              <option>Management</option>
+              <option>Other</option>
+            </select>
+            <span class="field-error" id="student-department-error"></span>
+          </div>
+          <div class="field">
+            <label for="student-year">Year of study</label>
+            <select id="student-year" name="year" required>
+              <option value="">Select year</option>
+              <option>1st year</option>
+              <option>2nd year</option>
+              <option>3rd year</option>
+              <option>4th year</option>
+              <option>Postgraduate</option>
+            </select>
+            <span class="field-error" id="student-year-error"></span>
+          </div>
+          <div class="field field-span">
+            <label for="resume-link">Resume link</label>
+            <input id="resume-link" name="resumeLink" type="url" maxlength="300" placeholder="https://..." required>
+            <span class="field-error" id="resume-link-error"></span>
+          </div>
+          <div class="field field-span">
+            <label for="cover-letter">Short cover letter</label>
+            <textarea id="cover-letter" name="coverLetter" rows="4" maxlength="1000" required></textarea>
+            <span class="field-error" id="cover-letter-error"></span>
+          </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit application</button>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog class="modal" id="profile-dialog" aria-labelledby="profile-title">
+    <div class="modal-card">
+      <button class="icon-button" id="close-profile" type="button" aria-label="Close">×</button>
+      <div id="auth-guest">
+        <p class="eyebrow">Saved on this computer</p>
+        <h2 id="profile-title">Login</h2>
+        <p class="section-intro">Create an account once. The email and password stay in this browser’s local database, so you can log in again on this computer after a refresh.</p>
+        <div class="auth-switch" role="tablist" aria-label="Account">
+          <button type="button" id="show-login" class="is-active">Login</button>
+          <button type="button" id="show-register">Register</button>
+        </div>
+        <form id="login-form" novalidate>
+          <div class="form-alert" id="login-alert" role="alert" hidden></div>
+          <div class="form-grid">
+            <div class="field field-span">
+              <label for="login-email">College email</label>
+              <input id="login-email" type="email" maxlength="120" autocomplete="username" required>
+              <span class="field-error" id="login-email-error"></span>
+            </div>
+            <div class="field field-span">
+              <label for="login-password">Password</label>
+              <input id="login-password" type="password" maxlength="80" autocomplete="current-password" required>
+              <span class="field-error" id="login-password-error"></span>
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit">Login</button>
+        </form>
+        <form id="register-form" novalidate hidden>
+          <div class="form-alert" id="register-alert" role="alert" hidden></div>
+          <div class="form-grid">
+            <div class="field field-span">
+              <label for="register-name">Student name</label>
+              <input id="register-name" type="text" maxlength="80" autocomplete="name" required>
+              <span class="field-error" id="register-name-error"></span>
+            </div>
+            <div class="field field-span">
+              <label for="register-email">College email</label>
+              <input id="register-email" type="email" maxlength="120" autocomplete="username" required>
+              <span class="field-error" id="register-email-error"></span>
+            </div>
+            <div class="field">
+              <label for="register-password">Password</label>
+              <input id="register-password" type="password" maxlength="80" autocomplete="new-password" required>
+              <span class="field-error" id="register-password-error"></span>
+            </div>
+            <div class="field">
+              <label for="register-confirm">Confirm password</label>
+              <input id="register-confirm" type="password" maxlength="80" autocomplete="new-password" required>
+              <span class="field-error" id="register-confirm-error"></span>
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit">Create account</button>
+        </form>
+      </div>
+      <div id="auth-user" hidden>
+        <p class="eyebrow">Logged in</p>
+        <h2 id="auth-user-title">Your account</h2>
+        <p class="section-intro" id="auth-welcome"></p>
+        <button class="btn btn-primary" id="logout-button" type="button">Log out</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <p class="noscript">Turn on JavaScript to browse jobs and save applications in this browser.</p>
+  </noscript>
+
+  <script src="script.js"></script>
+</body>
+</html>
